@@ -3,6 +3,7 @@ const bcrypt = require ('bcrypt')
 const jwt = require ('jsonwebtoken')
 const fs = require('fs')
 
+// Authentication
 const signup = async (req, res) => {
   const hash = bcrypt.hashSync(req.body.password, 10)
   try {
@@ -19,6 +20,8 @@ const login = async (req, res) => {
     const user = await User.findOne ({
       where : {email: req.body.email}})
   if (user) {
+      let session = req.session
+      session.userid = req.body.email
       const password_valid = await bcrypt.compare (req.body.password, user.password)
     if (password_valid) {
       res.status(200).json({
@@ -36,6 +39,12 @@ const login = async (req, res) => {
   }
 }
 
+const logout = async (req,res) => {
+  req.session.destroy()
+  res.redirect('/')
+}
+
+// Profile
 const getAllUsers = async (req, res) => {
   User.findAll()
   .then(infos => res.status(200).json(infos))
@@ -71,5 +80,5 @@ const getUser = async (req, res) => {
 
 
 module.exports = {
-  signup, login, getAllUsers, getUser, modifyUser,
+  signup, login, logout, getAllUsers, getUser, modifyUser, 
 }

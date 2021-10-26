@@ -1,5 +1,9 @@
 const express = require('express')
 const path = require('path')
+const cookieParser = require("cookie-parser")
+const sessions = require ('express-session')
+
+
 const Sequelize = require('sequelize');
 const User = require('./models/user');
 const Subject = require('./models/subject')
@@ -10,16 +14,33 @@ const sequelize = require ('./util/database')
 
 const app = express();
 
+// CORS
+
+
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
   next();
 });
 
+// session
+
+const oneDay = 1000 * 60 * 60 * 24
+app.use(sessions({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    resave: false 
+}));
+
+// 
+
 app.get('/', (req,res) => res.send('INDEX'))
 app.use(express.json())
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images')))
+app.use(cookieParser())
 
 // Routes
 
