@@ -36,7 +36,7 @@ const modifyMultimedia = async (req,res) => {
        text: req.body.text,
        image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
      })
-     .then(multimedia => res.status(200).json(multimedia))
+     .then(newMultimedia => res.status(200).json(newMultimedia))
    }
  })
 .catch(error => res.status(400).json({error})

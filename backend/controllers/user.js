@@ -71,7 +71,7 @@ const getUser = async (req, res) => {
         email: req.body.email,
         image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
       })
-      .then(user => res.status(200).json(user))
+      .then(newUser => res.status(200).json(newUser))
     }
   })
 .catch(error => res.status(400).json({error})

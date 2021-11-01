@@ -29,7 +29,7 @@ const modifyTextComment = async (req,res) => {
        text: req.body.text,
        
      })
-     .then(comment => res.status(200).json(comment))
+     .then(newComment => res.status(200).json(newComment))
    }
  })
 .catch(error => res.status(400).json({error})

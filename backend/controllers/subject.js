@@ -35,7 +35,7 @@ const modifyTextSubject = async (req,res) => {
        text: req.body.text,
        
      })
-     .then(subject => res.status(200).json(subject))
+     .then(newSubject => res.status(200).json(newSubject))
    }
  })
 .catch(error => res.status(400).json({error})

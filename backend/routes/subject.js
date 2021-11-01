@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const subjectCtrl = require('../controllers/subject')
-const auth = require ('../middlewares/auth')
-const { authJwt } = require ('../middlewares');
+
 
 router.post('/subject', subjectCtrl.create)
 
