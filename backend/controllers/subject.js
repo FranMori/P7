@@ -1,11 +1,10 @@
 const Subject = require('../models/subject')
 
 const create = async (req,res) => {
-  // let user_id = sessionStorage.getItem('userId')
   Subject.create({
     title: req.body.title,
     text: req.body.text,
-    // userId: user_id
+    userId: req.body.userId
   }) .then(subject => res.status(201).json({subject}))
     .catch(error => res.status(401).json({error}))
 }

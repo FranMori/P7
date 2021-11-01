@@ -1,25 +1,26 @@
 const Comment = require('../models/comment')
 
 const create = async (req,res) => {
-  Comment.create(
-    text = req.body.textComment,
-    subjectId = req.params.id
-  ) .then(comment => res.status(201).json({comment}))
+  Comment.create({
+    text: req.body.textComment,
+    userId: req.body.userId,
+    subjectId: req.body.subjectId,
+
+  }) .then(comment => res.status(201).json({comment}))
     .catch(error => res.status(401).json({error}))
 }
 
-
-const getTextComment = async (req, res) => {
-  Comment.findOne ({
-    where : {id: req.params.id}
+const getAllTextComment = async (req, res) => {
+  Comment.findAll({
+    where: {subjectId: req.params.id}
   })
-  .then(commentText => res.status(200).json(commentText))
+  .then(comments => res.status(200).json({comments}))
   .catch(error => res.status(400).json({error}))
 }
 
 const modifyTextComment = async (req,res) => {
   Comment.findOne({ 
-    where: {id: req.params.id}
+    where: {id: req.body.id}
 
    })
  .then(function (comment) {
@@ -44,5 +45,5 @@ const deleteTextComment = async (req,res) => {
 
 
 module.exports = {
-  create, getTextComment, modifyTextComment, deleteTextComment,
+  create, modifyTextComment, deleteTextComment, getAllTextComment
 }

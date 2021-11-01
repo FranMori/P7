@@ -2,6 +2,7 @@ const User = require('../models/user')
 const bcrypt = require ('bcrypt')
 const jwt = require ('jsonwebtoken')
 const fs = require('fs')
+const config = require("../util/auth.config");
 
 // Authentication
 const signup = async (req, res) => {
@@ -20,15 +21,13 @@ const login = async (req, res) => {
     const user = await User.findOne ({
       where : {email: req.body.email}})
   if (user) {
-      let session = req.session
-      session.userid = req.body.email
       const password_valid = await bcrypt.compare (req.body.password, user.password)
     if (password_valid) {
       res.status(200).json({
         userId: user.id,
         token: jwt.sign(
-          {"id": user._id},
-          'RANDOM_TOKEN_SECRET',
+          {id: user.id},
+          config.secret,
           {expiresIn:'24h'}
         )
       })
