@@ -18,9 +18,17 @@ const getAllTextComment = async (req, res) => {
   .catch(error => res.status(400).json({error}))
 }
 
-const modifyTextComment = async (req,res) => {
+const getTextComment = async (req,res) => {
+  Comment.findOne({
+    where: {id: req.params.id}
+  })
+  .then(comment => res.status(200).json(comment))
+  .catch(error => res.status(400).json({error}))
+}
+
+const modifyTextComment = async (req, res) => {
   Comment.findOne({ 
-    where: {id: req.body.id}
+    where: {id: req.params.id}
 
    })
  .then(function (comment) {
@@ -45,5 +53,5 @@ const deleteTextComment = async (req,res) => {
 
 
 module.exports = {
-  create, modifyTextComment, deleteTextComment, getAllTextComment
+  create, modifyTextComment, deleteTextComment, getAllTextComment, getTextComment
 }

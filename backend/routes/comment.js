@@ -4,9 +4,10 @@ const commentCtrl = require('../controllers/comment')
 
 router.post('/comment', commentCtrl.create)
 
-router.get('/comment/:id', commentCtrl.getAllTextComment)
+router.get('/allComment/:id', commentCtrl.getAllTextComment)
+router.get('/comment/:id', commentCtrl.getTextComment)
 
-router.put('/comment', commentCtrl.modifyTextComment)
+router.put('/comment/:id', commentCtrl.modifyTextComment)
 
 router.delete('/comment/:id', commentCtrl.deleteTextComment)
 
