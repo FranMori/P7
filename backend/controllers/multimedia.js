@@ -1,11 +1,12 @@
 const Multimedia = require('../models/multimedia')
+const User = require ('../models/user')
 
 const create = async (req,res) => {
   Multimedia.create({
     title: req.body.title,
     text: req.body.text,
-    image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-
+    image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    userId: req.body.userId
   }) .then(multimedia => res.status(201).json(multimedia))
     .catch(error => res.status(401).json({error}))
 }
@@ -50,7 +51,22 @@ const deleteMultimedia = async (req,res) => {
   .catch(error => res.status(400).json({error}))
   }
 
+  //  Auteur
+
+ const getAuthor = async (req, res) => {
+  Multimedia.findOne ({
+    where : {id: req.params.id}
+  })
+  .then(multimedia => {
+    let userId = multimedia.userId
+    User.findOne({
+        where : {id: userId}
+      }).then((auteur) => res.status(200).json(auteur))
+    }) 
+  .catch(error => res.status(400).json({error}))
+}
+
 
 module.exports = {
-  create, getMultimediaInfos, getMultimedia, modifyMultimedia, deleteMultimedia,
+  create, getMultimediaInfos, getMultimedia, modifyMultimedia, deleteMultimedia, getAuthor
 }

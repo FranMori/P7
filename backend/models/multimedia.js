@@ -23,9 +23,18 @@ const Multimedia = sequelize.define('multimedia', {
 
   },
   image: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
     allowNul: true,
-  }
+  },
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNul:false,
+    references: {
+      model:'users',
+      key:'id'
+    }
+
+  },
   
  
 

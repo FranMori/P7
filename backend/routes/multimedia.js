@@ -8,6 +8,7 @@ router.post('/multimedia', multer, multimediaCtrl.create)
 
 router.get('/multimedia', multimediaCtrl.getMultimediaInfos)
 router.get('/multimedia/:id', multimediaCtrl.getMultimedia)
+router.get ('/multimedia/author/:id', multimediaCtrl.getAuthor)
 
 router.put('/multimedia/:id', multer, multimediaCtrl.modifyMultimedia)
 

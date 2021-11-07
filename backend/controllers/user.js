@@ -77,7 +77,6 @@ const getUser = async (req, res) => {
 .catch(error => res.status(400).json({error})
 )}
 
-
 module.exports = {
   signup, login, logout, getAllUsers, getUser, modifyUser, 
 }

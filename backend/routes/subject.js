@@ -7,6 +7,8 @@ router.post('/subject', subjectCtrl.create)
 
 router.get('/subject',  subjectCtrl.getSubjectInfos)
 router.get('/subject/:id',  subjectCtrl.getTextSubject)
+router.get ('/subject/author/:id', subjectCtrl.getAuthor)
+
 
 router.put('/subject/:id', subjectCtrl.modifyTextSubject)
 

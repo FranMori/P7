@@ -1,4 +1,5 @@
 const Subject = require('../models/subject')
+const User = require ('../models/user')
 
 const create = async (req,res) => {
   Subject.create({
@@ -49,7 +50,20 @@ const deleteTextSubject = async (req,res) => {
   .catch(error => res.status(400).json({error}))
   }
 
+  const getAuthor = async (req, res) => {
+    Subject.findOne ({
+      where : {id: req.params.id}
+    })
+    .then(subject => {
+      let userId = subject.userId
+      User.findOne({
+          where : {id: userId}
+        }).then((auteur) => res.status(200).json(auteur))
+      }) 
+    .catch(error => res.status(400).json({error}))
+  }
+
 
 module.exports = {
-  create, getSubjectInfos, getTextSubject, modifyTextSubject, deleteTextSubject,
+  create, getSubjectInfos, getTextSubject, modifyTextSubject, deleteTextSubject, getAuthor
 }
