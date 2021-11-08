@@ -26,7 +26,7 @@
      <div v-if="mode === 'display'">   
 
         <div v-for="commentMulti in commentMultis" :key="commentMulti.id">
-          <p> Salut </p>
+          <p> Yo </p>
           <img :src='commentMulti.image' alt="Photo ou gif">
             <div v-if="userId === commentMulti.userId">
               <button> <router-link :to="{name: 'CommentMulti', params: {id : commentMulti.id}}"> Modifier </router-link></button>
