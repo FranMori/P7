@@ -1,5 +1,6 @@
 const Sequelize = require ('sequelize')
 const sequelize = require ('../util/database')
+const moment = require ('moment-timezone')
 
 const Comment = sequelize.define('comment', {
   id: {
@@ -32,10 +33,7 @@ const Comment = sequelize.define('comment', {
       model:'subjects',
       key:'id'
     }
-  }
-
-  
-
+  },
  
 
 })

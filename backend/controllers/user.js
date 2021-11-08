@@ -25,7 +25,7 @@ const login = async (req, res) => {
     if (password_valid) {
       res.status(200).json({
         userId: user.id,
-        token: jwt.sign(
+        accesToken: jwt.sign(
           {id: user.id},
           config.secret,
           {expiresIn:'24h'}
