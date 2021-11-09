@@ -5,10 +5,8 @@ const Sequelize = require('sequelize');
 const User = require('./models/user');
 const Subject = require('./models/subject')
 const Comment = require('./models/comment')
-const CommentMulti = require('./models/commentMulti')
 
 const sequelize = require ('./util/database');
-const Multimedia = require('./models/multimedia');
 
 const app = express();
 
@@ -32,8 +30,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use('/api/auth', require('./routes/user'))
 app.use('/api/auth', require('./routes/subject'))
 app.use('/api/auth', require('./routes/comment'))
-app.use('/api/auth', require ('./routes/multimedia'))
-app.use('/api/auth', require ('./routes/commentMulti'))
 
 
 const PORT = process.env.PORT || 5000;
@@ -54,8 +50,6 @@ Subject.belongsTo(User)
 User.hasMany(Comment)
 Comment.belongsTo(User)
 
-User.hasMany(CommentMulti)
-CommentMulti.belongsTo(User)
 
 Subject.hasMany(Comment)
 Comment.belongsTo(Subject)

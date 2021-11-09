@@ -6,10 +6,10 @@ const instance = axios.create({
   baseURL: 'http://localhost:5000/api'
 })
 
-const reqHeaders = {
-  'headers': {
-    'Access-Control-Allow-Headers': 'x-access-token',  }
-}
+// const reqHeaders = {
+//   'headers': {
+//     'Access-Control-Allow-Headers': 'x-access-token',  }
+// }
 
 const store = createStore({
   modules: {
@@ -28,29 +28,18 @@ const store = createStore({
       password: '',
       image: '',
     },
-    textInfos: {
+    subjectInfos: {
       title: '',
-      text: '',
-
-    },
-    multimediaSubjectInfos: {
-      title: '',
-      text:'',
-      image:'',
-    },
-    commentTextInfos: {
-      text: '',
-
-    },
-    commentMultimediaInfos: {
       text: '',
       image: ''
     },
+    commentInfos: {
+      text: '',
+      image:''
+    },
 
     subjects : [],
-    multimedias: [],
     comments: [],
-    commentMultis: [],
   },
   
   mutations: {
@@ -60,36 +49,24 @@ const store = createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos
     },
-    subjectTextInfos: function (state, subjects) {
+    subject: function (state, subjects) {
       state.subjects = subjects
     },
-    textInfos: function (state, textInfos) {
-      state.textInfos = textInfos
+    subjectInfos: function (state, subjectInfos) {
+      state.subjectInfos = subjectInfos
     },
-    multimediaInfos: function (state, multimedias) {
-      state.multimedias = multimedias
-    },
-    multimediaSubjectInfos: function (state, multimediaSubjectInfos) {
-      state.multimediaSubjectInfos = multimediaSubjectInfos
-    },
-    commentTextInfos: function (state, comments) {
+    comment: function (state, comments) {
       state.comments = comments
     },
-    commentInfos: function (state, commentTextInfos) {
-      state.commentTextInfos = commentTextInfos
+    commentInfos: function (state, commentInfos) {
+      state.commentInfos = commentInfos
     },
-    commentMultimediaInfos: function (state, commentMultis) {
-      state.commentMultis = commentMultis
-    },
-    
+   
 
   },
   getters: {
     subjects: state => {
       return state.subjects
-    },
-    multimedias: state => {
-      return state.multimedias
     },
     authenticated(state){
       return !!state.user
@@ -97,9 +74,6 @@ const store = createStore({
     comments: state => {
       return state.comments
     },
-    commentMultis: state => {
-      return state.commentMultis
-    }
    
   },
   actions: {
@@ -172,10 +146,10 @@ const store = createStore({
       })
     },
     
-    // textSubject
-    createTextSubject: ({commit}, subjectTextInfos) => {
+    // Subject
+    createSubject: ({commit}, subjectInfos) => {
       return new Promise ((resolve, reject) => {
-        instance.post('/auth/subject', Object.assign({}, subjectTextInfos, reqHeaders))
+        instance.post('/auth/subject', subjectInfos)
         .then(function (response){
           
           commit('setStatus', 'created')
@@ -187,28 +161,28 @@ const store = createStore({
         })  
       })
     },
-    getSubjectInfos: ({commit}) => {
+    getAllSubjectInfos: ({commit}) => {
       instance.get('/auth/subject')
       .then(function (response){
-        commit('subjectTextInfos', response.data.subjects)
+        commit('subject', response.data.subjects)
       })
       .catch(function () {
         commit('setStatus', 'error')
       })
   },
-    getTextSubject : ({commit}) => {
-    const url = window.location.href
-    const id = url.split('/texte/')[1]
+    getSubject : ({commit}) => {
+    const url = window.location.pathname.split('/')
+    const id = url[2]
       instance.get('/auth/subject/' + id)
       .then(function(response) {
-        commit('textInfos', response.data)
+        commit('subjectInfos', response.data)
       })
     },
-    modifyTextSubject: ({commit}, textInfos) => {
+    modifySubject: ({commit}, subjectInfos) => {
       return new Promise ((resolve, reject) => {
-        const url = window.location.href
-        const id = url.split('/texte/')[1]
-        instance.put('/auth/subject/' + id, textInfos,)
+    const url = window.location.pathname.split('/')
+    const id = url[2]
+        instance.put('/auth/subject/' + id, subjectInfos,)
         .then(function (response){
           commit('setStatus', 'modified')
           resolve(response);
@@ -220,25 +194,25 @@ const store = createStore({
       })
     },
 
-    deleteTextSubject: ({commit}) => {
-      const url = window.location.href
-      const id = url.split('/texte/')[1]
+    deleteSubject: ({commit}) => {
+      const url = window.location.pathname.split('/')
+      const id = url[2]
       instance.delete('/auth/subject/' + id, )
       commit('setStatus', 'deleted')
     },
 
-    getTextAuthor: ({commit}) => {
-      const url = window.location.href
-      const id = url.split('/texte/')[1]
+    getAuthor: ({commit}) => {
+      const url = window.location.pathname.split('/')
+    const id = url[2]
         instance.get('/auth/subject/author/' + id)
         .then(function(response) {
           commit('userInfos', response.data)
         })
       },
-    // textComment
-    createTextComment: ({commit}, commentTextInfos) => {
+    // Comment
+    createComment: ({commit}, commentInfos) => {
       return new Promise ((resolve, reject) => {
-        instance.post('/auth/comment', Object.assign({}, commentTextInfos, reqHeaders))
+        instance.post('/auth/comment', commentInfos,)
         .then(function (response){
           
           commit('setStatus', 'created')
@@ -250,20 +224,20 @@ const store = createStore({
         })  
       })
     },
-    getAllTextComments: ({commit}, ) => {
-    const url = window.location.href
-    const id = url.split('/texte/')[1]
+    getAllComments: ({commit}, ) => {
+      const url = window.location.pathname.split('/')
+      const id = url[2]
       instance.get('/auth/AllComment/' + id)
       .then(function (response){
-        commit('commentTextInfos', response.data.comments)
+        commit('comment', response.data.comments)
       })
       .catch(function () {
         commit('setStatus', 'error')
       })
     },
-    getTextComment: ({commit}, ) => {
-      const url = window.location.href
-      const id = url.split('/comment/')[1]
+    getComment: ({commit}, ) => {
+      const url = window.location.pathname.split('/')
+      const id = url[2]
         instance.get('/auth/comment/' + id)
         .then(function (response){
           commit('commentInfos', response.data)         
@@ -273,11 +247,11 @@ const store = createStore({
         })
       },
 
-    modifyTextComment: ({commit}, commentTextInfos) => {
+    modifyComment: ({commit}, commentInfos) => {
       return new Promise ((resolve, reject) => {  
         const url = window.location.href
         const id = url.split('/comment/')[1]      
-        instance.put('/auth/comment/' + id, commentTextInfos, )
+        instance.put('/auth/comment/' + id, commentInfos, )
         .then(function (response){
           commit('setStatus', 'modified')
           resolve(response);
@@ -289,106 +263,12 @@ const store = createStore({
       })
     },
 
-    deleteTextComment: ({commit}) => {
+    deleteComment: ({commit}) => {
       const url = window.location.href
       const id = url.split('/comment/')[1]
       instance.delete('/auth/comment/' + id, )
       commit('setStatus', 'deleted')
     },
-
-  // Multimedia
-createMultimedia: ({commit}, multimediaInfos) => {
-  return new Promise ((resolve, reject) => {
-    instance.post('/auth/multimedia', multimediaInfos)
-    .then(function (response){
-      
-      commit('setStatus', 'created')
-      resolve(response);
-    })
-    .catch(function (error) {
-      commit('setStatus', 'error_create')
-      reject(error)
-    })  
-  })
-},
-getMultimediaInfos: ({commit}) => {
-  instance.get('/auth/multimedia')
-  .then(function (response){
-    commit('multimediaInfos', response.data.multimedias)
-  })
-  .catch(function () {
-    commit('setStatus', 'error')
-  })
-},
-getMultimedia : ({commit}) => {
-  const url = window.location.href
-  const id = url.split('/multimedia/')[1]
-    instance.get('/auth/multimedia/' + id)
-    .then(function(response) {
-      commit('multimediaSubjectInfos', response.data)
-    })
-  },
-  modifyMultimedia: ({commit}, multimediaSubjectInfos) => {
-    return new Promise ((resolve, reject) => {
-      const url = window.location.href
-      const id = url.split('/multimedia/')[1]
-      instance.put('/auth/multimedia/' + id, multimediaSubjectInfos)
-      .then(function (response){
-        commit('setStatus', 'modified')
-        resolve(response);
-      })
-      .catch(function (error) {
-        commit('setStatus', 'error_modify')
-        reject(error)
-      })  
-    })
-  },
-
-  getMultimediaAuthor: ({commit}) => {
-    const url = window.location.href
-    const id = url.split('/multimedia/')[1]
-      instance.get('/auth/multimedia/author/' + id)
-      .then(function(response) {
-        commit('userInfos', response.data)
-        console.log(response.data)
-      })
-    },
-  deleteMultimedia: ({commit}) => {
-    const url = window.location.href
-    const id = url.split('/multimedia/')[1]
-    instance.delete('/auth/multimedia/' + id)
-    commit('setStatus', 'deleted')
-  },
-  
-  // Multimedia Comment
-  createMultimediaComment: ({commit}, commentMultimediaInfos) => {
-    return new Promise ((resolve, reject) => {
-      instance.post('/auth/commentMulti', commentMultimediaInfos)
-      .then(function (response){
-        
-        commit('setStatus', 'created')
-        resolve(response);
-      })
-      .catch(function (error) {
-        commit('setStatus', 'error_create')
-        reject(error)
-      })  
-    })
-  },
-  getAllMultiComments: ({commit} ) => {
-    const url = window.location.href
-    const id = url.split('/multimedia/')[1]
-      instance.get('/auth/AllCommentMulti/' + id)
-      .then(function (response){
-        commit('commentMultimediaInfos', response.data)
-        console.log(response.data)
-        
-      })
-      .catch(function () {
-        commit('setStatus', 'error')
-      })
-    },
-
 
 
   }

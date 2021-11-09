@@ -1,13 +1,22 @@
 const Comment = require('../models/comment')
 
 const create = async (req,res) => {
-  Comment.create({
-    text: req.body.textComment,
+  const commentObject = req.file ? {
+    text: req.body.text,
+    image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     userId: req.body.userId,
-    subjectId: req.body.subjectId,
+    subjectId: req.body.subjectId
+  } : {
+    text: req.body.text,
+    userId: req.body.userId,
+    subjectId: req.body.subjectId
 
-  }) .then(comment => res.status(201).json({comment}))
-    .catch(error => res.status(401).json({error}))
+  }
+  Comment.create({ 
+    ...commentObject
+  }).then(comment => res.status(201).json({comment}))
+      .catch(error => res.status(401).json({error}))
+  
 }
 
 const getAllTextComment = async (req, res) => {
@@ -26,20 +35,25 @@ const getTextComment = async (req,res) => {
   .catch(error => res.status(400).json({error}))
 }
 
-const modifyTextComment = async (req, res) => {
-  Comment.findOne({ 
-    where: {id: req.params.id}
+const modifyTextComment = async (req,res) => {
+  const commentObject = req.file ? {
+   text: req.body.text,
+   image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+ } : {
+   text: req.body.text,
+ }
+ Comment.findOne({ 
+   where: {id: req.params.id}
 
-   })
- .then(function (comment) {
-   if (comment) {
-     comment.update({
-       text: req.body.text,
-       
-     })
-     .then(newComment => res.status(200).json(newComment))
-   }
- })
+  })
+.then(function (comment) {
+  if (comment) {
+    comment.update({
+      ...commentObject       
+    })
+    .then(newComment => res.status(200).json(newComment))
+  }
+})
 .catch(error => res.status(400).json({error})
 )}
 

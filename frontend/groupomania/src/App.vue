@@ -28,6 +28,7 @@ let localStorageValue = localStorage.getItem("user")
 let localStorageValueParsed = JSON.parse(localStorageValue)
 let userId = localStorageValueParsed.userId
 
+
 export default {
   name: "App",
   data: function() {

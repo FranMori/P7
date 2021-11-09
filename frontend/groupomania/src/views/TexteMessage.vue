@@ -1,5 +1,8 @@
 <template>
   <div>
+
+    <!-- display -->
+
     <div v-if="mode === 'display'" class="sujet">
       <div class="sujet__auteur">
         <div class="sujet__auteur__image">
@@ -15,10 +18,17 @@
       </div>
     </div>
    <div class="core" v-if="mode ==='display'">
+    <div v-if="subject.image != null">
+      <img  :src='subject.image' alt="photo ou gif" />
+    </div> 
     <p> {{subject.text}} </p>
-    <button @click="switchToModifySubject()">Modifier</button>
-    <button @click="deleteSubject()">Supprimer</button>
+    <div v-if="userId === subject.userId">
+      <button @click="switchToModifySubject()">Modifier</button>
     </div>
+    </div>
+
+<!-- commentaires -->
+
     <div class="core__comment" v-for="comment in comments" :key="comment.id">
       <div v-if="mode === 'display'" class="sujet__auteur commentaire" >
         <div class="sujet__auteur__image">
@@ -30,8 +40,14 @@
         </div>
       </div>
       <div class="core__comment__texte">
+        <div v-if="mode ==='display'">
+        <div v-if="comment.image != null">
+      <img  :src='comment.image' alt="photo ou gif" />
+      </div> 
+    </div>
       <p v-if="mode === 'display'"> {{comment.text}} </p>
       </div>
+     <div v-if="mode === 'display'">
       <div v-if="userId === comment.userId">
         <button> <router-link :to="{name: 'Comment', params: {id : comment.id}}"> Modifier </router-link></button>
       </div>  
@@ -41,23 +57,47 @@
       <button @click="modifyComment()">Confirmer</button>
       </div>
     </div>
-    
+    </div> 
 
-    <input v-if="mode === 'modify'" type="text" name="title" v-model="title" :placeholder= 'subject.title'>
-    <input v-if="mode === 'modify'" type="text" name="text" v-model="text" :placeholder= 'subject.text' >
+    <!-- modify -->
+    
+    <form v-if="mode === 'modify'" action="/api/subject"  method="PUT" enctype="multipart/form-data">
+      <label for="titlePut"> Modifier le titre </label>
+      <input  type="text" name="titlePut" v-model="titlePut" :placeholder= 'subject.title'>
+
+      <label for="textPut">Modifier le texte</label>
+      <input  type="text" name="textPut" v-model="textPut" :placeholder= 'subject.text' >
+
+      <div v-if="subject.image != null">
+       <label for="image">Modifier l'image ou le gif</label>
+       <input type="file" name="image" v-on:change="selectedFile($event)">
+     </div>
+    </form>
 
     <button v-if="mode === 'modify'" @click="modifySubject()">Confirmer</button>
+    <button v-if="mode === 'modify'" @click="deleteSubject()">Supprimer</button>
+
+
+    <!-- create comment -->
 
     <button @click='switchToCreateComment()' v-if="mode ==='display'">Ecrire un commentaire</button>
+  <div v-if="mode ==='create'">
+    <label for="textComment">Votre commentaire</label>
+    <input type="text" name="textComment" v-model="textComment">
 
-    <label v-if="mode === 'create'" for="textComment">Votre commentaire</label>
-    <input v-if="mode === 'create'" type="text" name="textComment" v-model="textComment">
-    <button @click='switchToDisplay(), createComment()' v-if="mode === 'create'">Envoyer le commentaire</button>
-    <button @click='switchToDisplay()' v-if="mode === 'create'" >Annuler</button>  
-  </div>
+    <div v-if="subject.image != null">
+      <label for="image">Ajouter une image ou un gif</label>
+      <input type="file" name="image" v-on:change="selectedFile($event)">
+    </div>
+
+    <button @click='switchToDisplay(), createComment()'>Envoyer le commentaire</button>
+    <button @click='switchToDisplay()' >Annuler</button>  
+  </div>  
+</div>
 </template>
 
 <script>
+
 let localStorageValue = localStorage.getItem("user")
 let localStorageValueParsed = JSON.parse(localStorageValue)
 let authorId = localStorageValueParsed.userId
@@ -78,16 +118,16 @@ export default {
     }
   },
   mounted: function() {
-      this.$store.dispatch('getTextSubject')
-      this.$store.dispatch('getAllTextComments')
-      this.$store.dispatch('getTextAuthor')
+      this.$store.dispatch('getSubject')
+      this.$store.dispatch('getAllComments')
+      this.$store.dispatch('getAuthor')
 
     },
 
     computed: {
       
     ...mapState({
-      subject: 'textInfos',
+      subject: 'subjectInfos',
       user: "userInfos"
 
     }),
@@ -98,6 +138,9 @@ export default {
   },
 
   methods: {
+    selectedFile(event) {
+      this.file = event.target.files[0]
+    },
     switchToCreateComment: function () {
       this.mode= 'create'
     },
@@ -112,49 +155,55 @@ export default {
     },
     modifySubject: function () {
       const self = this
-      this.$store.dispatch('modifyTextSubject', {
-        title: this.title,
-        text: this.text,
-         
-      }).then(function () {
-        self.$router.push('/texte')
+      let formDataSubjectModify = new FormData()
+      formDataSubjectModify.append('title', this.titlePut)
+      formDataSubjectModify.append('text', this.textPut)
+      formDataSubjectModify.append('image', this.file)
+
+      this.$store.dispatch('modifySubject', formDataSubjectModify)
+      .then(function () {
+        self.$router.push('/')
       })
     },
     deleteSubject: function () {
       const self = this
-      this.$store.dispatch('deleteTextSubject')
+      this.$store.dispatch('deleteSubject')
       .then(function () {
-        self.$router.push('/texte')
+        self.$router.push('/')
       })
     },
     createComment: function () {
       const self = this
-      const url = window.location.href
-      const subjectId = url.split('/texte/')[1]
+      const url = window.location.pathname.split('/')
+    console.log(url[2])
+    const subjectId = url[2]
      let user = JSON.parse(window.localStorage.getItem('user'))
-      this.$store.dispatch('createTextComment', {
-        textComment: this.textComment,
-        userId: user.userId,
-        subjectId: subjectId
-      }).then(function () {
-        self.$router.push('/texte')
+     let formDataComment = new FormData()
+     formDataComment.append('text', this.textComment)
+     formDataComment.append('image', this.file)
+     formDataComment.append('userId', user.userId)
+     formDataComment.append('subjectId', subjectId)
+
+      this.$store.dispatch('createComment', formDataComment)
+      .then(function () {
+        self.$router.push('/')
       })
     }
   },
   modifyComment: function () {
     const self = this
       this.$store.dispatch('modifyTextComment', {
-        textComment: this.textComment,
+        text: this.textComment,
         id: this.comment.id
       }).then(function () {
-        self.$router.push('/texte')
+        self.$router.push('/')
       })
   },
    deleteComment: function () {
       const self = this
       this.$store.dispatch('deleteTextComment')
       .then(function () {
-        self.$router.push('/texte')
+        self.$router.push('/')
       })
     },
 }

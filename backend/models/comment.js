@@ -1,6 +1,5 @@
 const Sequelize = require ('sequelize')
 const sequelize = require ('../util/database')
-const moment = require ('moment-timezone')
 
 const Comment = sequelize.define('comment', {
   id: {
@@ -15,6 +14,10 @@ const Comment = sequelize.define('comment', {
     type: Sequelize.TEXT,
     allowNul: false,
 
+  },
+  image: {
+    type:Sequelize.STRING,
+    allowNul:true
   },
 
   userId: {

@@ -1,6 +1,5 @@
 const Sequelize = require ('sequelize')
 const sequelize = require ('../util/database');
-const User = require('./user');
 
 const Subject = sequelize.define('subject', {
   id: {
@@ -22,6 +21,12 @@ const Subject = sequelize.define('subject', {
     allowNul: false,
 
   },
+
+  image: {
+    type: Sequelize.STRING,
+    allowNul: true,
+  },
+
   userId: {
     type: Sequelize.INTEGER,
     allowNul:false,
@@ -30,10 +35,7 @@ const Subject = sequelize.define('subject', {
       key:'id'
     }
 
-  }
-  
- 
-
+  },
 })
 
 

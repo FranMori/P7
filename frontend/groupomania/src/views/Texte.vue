@@ -1,43 +1,34 @@
 <template>
 <div id="subjectInfos">
-  <h1>Forum Texte</h1>
-
-    <button> <router-link to='/texte/add'> Créer un sujet </router-link></button>
-
-  <table id="core">
-    <caption>Liste des sujets textuels</caption>
-    <tr class="title">
-      <th scope="col">Sujet</th>
-      <th scope="col">Réponses</th>
-
-    </tr>
-    <div v-for="subject in subjects" :key="subject.id">
-    <tr class="subjectInfos">
-      <td> <router-link :to="{name: 'TexteMessage', params: {id : subject.id}}"> {{subject.title}} </router-link> </td> 
-      <td> 8</td>
-      
-    </tr>
+    <div v-if="texte() === true">
+    <SubjectText />
     </div>
-  </table>
+    <div v-else> 
+    <SubjectMultimedia />
+    </div>
   </div>
 </template>
 
 <script>
+import SubjectText from '../components/SubjectText.vue'
+import SubjectMultimedia from '../components/SubjectMultimedia.vue'
 
 export default{
 name : 'Texte',
-props: {
-subject: Object
+components: {
+  SubjectText,
+  SubjectMultimedia
 },
-
-computed:  {
-  subjects(){
-      return this.$store.getters.subjects
+methods: {
+  texte: function() {
+    if (window.location.href === 'http://localhost:8080/texte' )
+    {
+    return true
+    } else {
+      return false
     }
-},
-mounted: function() {
-  this.$store.dispatch('getSubjectInfos')
-},
+  }
+}
 
 }
 </script>
@@ -56,5 +47,6 @@ mounted: function() {
 
 .title {
   background-color: lightgrey;
+  color: #2f4f4f;
 }
 </style>

@@ -2,12 +2,21 @@ const Subject = require('../models/subject')
 const User = require ('../models/user')
 
 const create = async (req,res) => {
-  Subject.create({
+  const subjectObject = req.file ? {
+    title: req.body.title,
+    text: req.body.text,
+    image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    userId: req.body.userId
+  } : {
     title: req.body.title,
     text: req.body.text,
     userId: req.body.userId
-  }) .then(subject => res.status(201).json({subject}))
-    .catch(error => res.status(401).json({error}))
+  }
+  Subject.create({ 
+    ...subjectObject
+  }).then(subject => res.status(201).json({subject}))
+      .catch(error => res.status(401).json({error}))
+  
 }
 
 const getSubjectInfos = async (req,res) => {
@@ -25,6 +34,14 @@ const getTextSubject = async (req, res) => {
 }
 
 const modifyTextSubject = async (req,res) => {
+   const subjectObject = req.file ? {
+    title: req.body.title,
+    text: req.body.text,
+    image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+  } : {
+    title: req.body.title,
+    text: req.body.text,
+  }
   Subject.findOne({ 
     where: {id: req.params.id}
 
@@ -32,9 +49,7 @@ const modifyTextSubject = async (req,res) => {
  .then(function (subject) {
    if (subject) {
      subject.update({
-       title: req.body.title,
-       text: req.body.text,
-       
+       ...subjectObject       
      })
      .then(newSubject => res.status(200).json(newSubject))
    }

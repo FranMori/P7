@@ -4,10 +4,16 @@
   <div>
     <p> {{comment.text}} </p>
   </div>
-  <label for="text">Mon commentaire</label>
-  <input type="text" v-model="text" name="text">
+  <form  action="/api/subject"  method="PUT" enctype="multipart/form-data">
+    <label for="text">Modifier mon commentaire</label>
+    <input type="text" v-model="text" name="text">
+    <div v-if="comment.image != null">
+      <label for="image">Modifier une image ou un gif</label>
+      <input type="file" name="image" v-on:change="selectedFile($event)">
+    </div>
+  </form>  
   <button @click="cancel()">Retour</button>
-  <button @click="modifyTextComment()">Confirmer</button>
+  <button @click="modifyComment()">Confirmer</button>
   <button @click="deleteComment()">Supprimer</button>
 </div>
 </template>
@@ -21,34 +27,39 @@ export default {
   props: ["id"],
 
   mounted: function() {
-    this.$store.dispatch("getTextComment",);
+    this.$store.dispatch("getComment",);
   },
   computed: {
     ...mapState({
-      comment: "commentTextInfos",
+      comment: "commentInfos",
      
     }),
   },
     
     methods: {
-      modifyTextComment: function () {
+      selectedFile(event) {
+      this.file = event.target.files[0]
+    },
+      modifyComment: function () {
       const self = this
-      this.$store.dispatch('modifyTextComment', {
-        text: this.text,
-         
-      }).then(function () {
-        self.$router.push('/texte')
+      let FormDataCommentModify = new FormData()
+      FormDataCommentModify.append('text', this.text)
+      FormDataCommentModify.append('image', this.file)
+
+      this.$store.dispatch('modifyComment', FormDataCommentModify)
+      .then(function () {
+        self.$router.push('/')
       })
     },
     cancel: function () {
       const self = this
-      self.$router.push('/texte')
+      self.$router.push('/')
     },
     deleteComment: function() {
       const self = this
-      this.$store.dispatch('deleteTextComment')
+      this.$store.dispatch('deleteComment')
       .then(function () {
-        self.$router.push('/texte')
+        self.$router.push('/')
       })
     }
 
