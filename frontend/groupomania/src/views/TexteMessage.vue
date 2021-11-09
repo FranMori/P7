@@ -98,9 +98,6 @@
 
 <script>
 
-let localStorageValue = localStorage.getItem("user")
-let localStorageValueParsed = JSON.parse(localStorageValue)
-let authorId = localStorageValueParsed.userId
 import {mapState} from 'vuex'
 
  
@@ -111,11 +108,17 @@ export default {
   id: Number,
   comment: Object,
   },
-  data: function () {
-    return {
-    mode: 'display',
-    userId: authorId
-    }
+  data: function() {
+    if(localStorage.getItem('user') != null) {
+      let localStorageValue = localStorage.getItem("user")
+      let localStorageValueParsed = JSON.parse(localStorageValue)
+      let authorId = localStorageValueParsed.userId
+        return {
+          userId: authorId,
+          mode: 'display'
+              }
+              }
+
   },
   mounted: function() {
       this.$store.dispatch('getSubject')

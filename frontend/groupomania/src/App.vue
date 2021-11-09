@@ -24,17 +24,21 @@
 </template>
 
 <script>
-let localStorageValue = localStorage.getItem("user")
-let localStorageValueParsed = JSON.parse(localStorageValue)
-let userId = localStorageValueParsed.userId
+console.log(localStorage.getItem('user'))
+
 
 
 export default {
   name: "App",
   data: function() {
-    return {
-      userId: userId
-    };
+    if(localStorage.getItem('user') != null) {
+let localStorageValue = localStorage.getItem("user")
+let localStorageValueParsed = JSON.parse(localStorageValue)
+let userId = localStorageValueParsed.userId
+return {
+  userId: userId
+}
+}
 
   },
 
@@ -44,6 +48,7 @@ export default {
     }
   },
   methods: {
+    
     logout: function() {
     this.$store.dispatch('auth/logout')
     this.$router.push('/connexion')

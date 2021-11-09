@@ -8,11 +8,6 @@ const instance = axios.create({
   baseURL: 'http://localhost:5000/api'
 })
 
-// const reqHeaders = {
-//   'headers': {
-//     'Access-Control-Allow-Headers': 'x-access-token',  }
-// }
-
 const store = createStore({
   modules: {
     auth,
