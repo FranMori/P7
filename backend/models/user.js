@@ -34,6 +34,10 @@ const User = sequelize.define('user', {
   image: {
     type: Sequelize.STRING,
     allowNul: true,
+  },
+  modo: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   }
 
 })
