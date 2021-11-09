@@ -2,6 +2,8 @@ import {createStore} from 'vuex'
 const axios = require('axios')
 import { auth } from "./auth.module"
 
+import  authHeader  from "../services/user.service"
+
 const instance = axios.create({
   baseURL: 'http://localhost:5000/api'
 })
@@ -91,22 +93,6 @@ const store = createStore({
         })  
       })
     },
-    login: ({commit}, userInfos) => {
-      commit('setStatus', 'loading')
-      return new Promise ((resolve, reject) => {
-        instance.post('/auth/login', userInfos)
-        .then(function (response){
-          commit('setStatus', 'error_login')
-          commit('logUser', response.data)
-          sessionStorage.setItem('userId', response.data.userId)
-          resolve(response);
-        })
-        .catch(function (error) {
-          commit('setStatus', '')
-          reject(error)
-        });
-      });
-    },
     logout: function()  {
       instance.get('/auth/logout')
     },
@@ -130,7 +116,7 @@ const store = createStore({
       })
     },
 
-    modifyProfile: ({commit}, userInfos) => {
+    modifyProfile: ({commit},  userInfos) => {
       return new Promise ((resolve, reject) => {
         const url = window.location.href
         const id = url.split('/profile/')[1]
@@ -147,9 +133,9 @@ const store = createStore({
     },
     
     // Subject
-    createSubject: ({commit}, subjectInfos) => {
+    createSubject: ({commit},  subjectInfos) => {
       return new Promise ((resolve, reject) => {
-        instance.post('/auth/subject', subjectInfos)
+        instance.post('/auth/subject',  subjectInfos, {headers: authHeader()})
         .then(function (response){
           
           commit('setStatus', 'created')
@@ -162,7 +148,7 @@ const store = createStore({
       })
     },
     getAllSubjectInfos: ({commit}) => {
-      instance.get('/auth/subject')
+      instance.get('/auth/subject', {headers: authHeader()})
       .then(function (response){
         commit('subject', response.data.subjects)
       })
@@ -173,7 +159,7 @@ const store = createStore({
     getSubject : ({commit}) => {
     const url = window.location.pathname.split('/')
     const id = url[2]
-      instance.get('/auth/subject/' + id)
+      instance.get('/auth/subject/' + id, {headers: authHeader()})
       .then(function(response) {
         commit('subjectInfos', response.data)
       })
@@ -182,7 +168,7 @@ const store = createStore({
       return new Promise ((resolve, reject) => {
     const url = window.location.pathname.split('/')
     const id = url[2]
-        instance.put('/auth/subject/' + id, subjectInfos,)
+        instance.put('/auth/subject/' + id, subjectInfos, {headers: authHeader()})
         .then(function (response){
           commit('setStatus', 'modified')
           resolve(response);
@@ -197,14 +183,14 @@ const store = createStore({
     deleteSubject: ({commit}) => {
       const url = window.location.pathname.split('/')
       const id = url[2]
-      instance.delete('/auth/subject/' + id, )
+      instance.delete('/auth/subject/' + id, {headers: authHeader()} )
       commit('setStatus', 'deleted')
     },
 
     getAuthor: ({commit}) => {
       const url = window.location.pathname.split('/')
     const id = url[2]
-        instance.get('/auth/subject/author/' + id)
+        instance.get('/auth/subject/author/' + id, {headers: authHeader()})
         .then(function(response) {
           commit('userInfos', response.data)
         })
@@ -212,7 +198,7 @@ const store = createStore({
     // Comment
     createComment: ({commit}, commentInfos) => {
       return new Promise ((resolve, reject) => {
-        instance.post('/auth/comment', commentInfos,)
+        instance.post('/auth/comment', commentInfos, {headers: authHeader()})
         .then(function (response){
           
           commit('setStatus', 'created')
@@ -227,7 +213,7 @@ const store = createStore({
     getAllComments: ({commit}, ) => {
       const url = window.location.pathname.split('/')
       const id = url[2]
-      instance.get('/auth/AllComment/' + id)
+      instance.get('/auth/AllComment/' + id, {headers: authHeader()})
       .then(function (response){
         commit('comment', response.data.comments)
       })
@@ -238,7 +224,7 @@ const store = createStore({
     getComment: ({commit}, ) => {
       const url = window.location.pathname.split('/')
       const id = url[2]
-        instance.get('/auth/comment/' + id)
+        instance.get('/auth/comment/' + id, {headers: authHeader()})
         .then(function (response){
           commit('commentInfos', response.data)         
         })
@@ -251,7 +237,7 @@ const store = createStore({
       return new Promise ((resolve, reject) => {  
         const url = window.location.href
         const id = url.split('/comment/')[1]      
-        instance.put('/auth/comment/' + id, commentInfos, )
+        instance.put('/auth/comment/' + id, commentInfos, {headers: authHeader()} )
         .then(function (response){
           commit('setStatus', 'modified')
           resolve(response);
@@ -266,7 +252,7 @@ const store = createStore({
     deleteComment: ({commit}) => {
       const url = window.location.href
       const id = url.split('/comment/')[1]
-      instance.delete('/auth/comment/' + id, )
+      instance.delete('/auth/comment/' + id, {headers: authHeader()} )
       commit('setStatus', 'deleted')
     },
 

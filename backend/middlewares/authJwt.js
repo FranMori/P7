@@ -22,7 +22,7 @@ const User = require("../models/user")
   });
 };
 
-const authJwt = {
-  verifyToken: verifyToken,
-};
-module.exports = authJwt;
+// const authJwt = {
+//   verifyToken: verifyToken,
+// };
+module.exports = verifyToken;

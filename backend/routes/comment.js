@@ -2,15 +2,17 @@ const express = require('express')
 const router = express.Router()
 const commentCtrl = require('../controllers/comment')
 const multer = require('../middlewares/multer-config')
+const verifyToken = require('../middlewares/authJwt')
 
-router.post('/comment', multer, commentCtrl.create)
 
-router.get('/allComment/:id', commentCtrl.getAllTextComment)
-router.get('/comment/:id', commentCtrl.getTextComment)
+router.post('/comment', verifyToken, multer, commentCtrl.create)
 
-router.put('/comment/:id', multer, commentCtrl.modifyTextComment)
+router.get('/allComment/:id', verifyToken, commentCtrl.getAllTextComment)
+router.get('/comment/:id', verifyToken, commentCtrl.getTextComment)
 
-router.delete('/comment/:id', commentCtrl.deleteTextComment)
+router.put('/comment/:id', verifyToken, multer, commentCtrl.modifyTextComment)
+
+router.delete('/comment/:id', verifyToken, commentCtrl.deleteTextComment)
 
 
 module.exports = router
