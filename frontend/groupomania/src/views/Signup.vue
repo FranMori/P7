@@ -44,14 +44,14 @@ export default {
      const schema = yup.object().shape({
       email: yup
         .string()
-        .required("Email is required!")
-        .email("Email is invalid!")
-        .max(50, "Must be maximum 50 characters!"),
+        .required("Veuillez entrer votre Email")
+        .email("l'Email n'est pas valide")
+        .max(50, "50 caractères maximum"),
       password: yup
         .string()
-        .required("Password is required!")
-        .min(6, "Must be at least 6 characters!")
-        .max(40, "Must be maximum 40 characters!"),
+        .required("Veuillez entrer votre mot de passe")
+        .min(6, "Au minimum 6 caractères")
+        .max(40, "40 caractères maximum"),
     });
 
     return {

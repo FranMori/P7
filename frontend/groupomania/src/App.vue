@@ -139,11 +139,15 @@ button {
   padding: 5px;
   border: 0px;
   cursor: pointer;
-  margin: 5% 0%;
+  margin: 5% 5%;
   font-size: 25px;
 }
 
 caption {
   margin-bottom: 15px;
+}
+label {
+  margin: 0px 20px
+
 }
 </style>

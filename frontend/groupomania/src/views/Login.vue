@@ -35,8 +35,8 @@ export default {
   },
    data() {
     const schema = yup.object().shape({
-      email: yup.string().required("Email is required!"),
-      password: yup.string().required("Password is required!"),
+      email: yup.string().required("Veuillez entrer votre Email"),
+      password: yup.string().required("Veuillez entrer votre mot de passe"),
     });
 
     return {
