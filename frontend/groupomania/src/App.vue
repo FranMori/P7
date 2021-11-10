@@ -24,9 +24,6 @@
 </template>
 
 <script>
-console.log(localStorage.getItem('user'))
-
-
 
 export default {
   name: "App",

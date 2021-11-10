@@ -23,7 +23,7 @@
       <img  :src='subject.image' alt="photo ou gif" />
     </div> 
     <p> {{subject.text}} </p>
-    <div v-if="userId === subject.userId || user.modo === 1">
+    <div v-if="userId === subject.userId || userId === 11">
       <button @click="switchToModifySubject()">Modifier</button>
     </div>
     </div>
@@ -49,7 +49,7 @@
       <p v-if="mode === 'display'"> {{comment.text}} </p>
       </div>
      <div v-if="mode === 'display'">
-      <div v-if="userId === comment.userId || user.modo === 1">
+      <div v-if="userId === comment.userId || userId === 11">
         <button> <router-link :to="{name: 'Comment', params: {id : comment.id}}"> Modifier </router-link></button>
       </div>  
       <div v-if="mode === 'modifyComment'">
@@ -223,10 +223,6 @@ export default {
 
 }
 
-.commentaire {
- 
-
-}
 .sujet__auteur {
   width: 30%;
  display: flex;
