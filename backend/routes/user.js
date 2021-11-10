@@ -12,4 +12,6 @@ router.get('/profile/:id', userCtrl.getUser)
 
 router.put('/profile/:id', multer, userCtrl.modifyUser)
 
+router.delete ('/profile/:id', userCtrl.deleteUser)
+
 module.exports = router

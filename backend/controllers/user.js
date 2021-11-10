@@ -77,6 +77,14 @@ const getUser = async (req, res) => {
 .catch(error => res.status(400).json({error})
 )}
 
+const deleteUser = async (req,res) => {
+  User.destroy ({
+    where : {id: req.params.id}
+  })
+.then(() => res.status(200).json({message: 'Utilisateur supprimé'}))
+.catch(error => res.status(400).json({error}))
+}
+
 module.exports = {
-  signup, login, logout, getAllUsers, getUser, modifyUser, 
+  signup, login, logout, getAllUsers, getUser, modifyUser, deleteUser
 }

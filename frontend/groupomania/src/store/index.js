@@ -126,6 +126,12 @@ const store = createStore({
         })  
       })
     },
+    deleteUser: ({commit}) => {
+      const url = window.location.href
+        const id = url.split('/profile/')[1]
+      instance.delete('/auth/profile/' + id,)
+      commit('setStatus', 'deleted')
+    },
     
     // Subject
     createSubject: ({commit},  subjectInfos) => {

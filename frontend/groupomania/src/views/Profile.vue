@@ -34,6 +34,8 @@
 
       </form>
           <button @click="modifyProfile()">Confirmer</button>
+          <button @click="cancel()">Retour</button>
+          <button @click="deleteUser()">Supprimer mon compte</button>
           </div>
 
 
@@ -82,7 +84,20 @@ export default {
     selectedFile(event) {
       this.file = event.target.files[0]
     },
+    cancel: function () {
+      const self = this
+      self.$router.push('/')
+    },
+     deleteUser: function () {
+      const self = this
+      this.$store.dispatch('deleteUser')
+      this.$store.dispatch('auth/logout')
+      .then(function () {
+      self.$router.push('/connexion')
+      })
+    },
   },
+   
 };
 </script>
 
