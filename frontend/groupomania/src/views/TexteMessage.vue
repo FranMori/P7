@@ -10,11 +10,12 @@
         </div>
         <div class="sujet__auteur__description">
           <p> {{user.prenom}} {{user.nom}} </p>
-          <p> {{user.createdAt}} </p>
         </div>
       </div>
       <div class="sujet__titre">
         <h1> {{subject.title}} </h1>
+         <p> {{user.createdAt}} </p>
+
       </div>
     </div>
    <div class="core" v-if="mode ==='display'">
@@ -30,7 +31,7 @@
 <!-- commentaires -->
 
     <div class="core__comment" v-for="comment in comments" :key="comment.id">
-      <div v-if="mode === 'display'" class="sujet__auteur commentaire" >
+      <div v-if="mode === 'display'" class="sujet__auteur__commentaire" >
         <div class="sujet__auteur__image">
           <img :src="user.image" alt="Photo de profil">
         </div>
@@ -41,7 +42,7 @@
       </div>
       <div class="core__comment__texte">
         <div v-if="mode ==='display'">
-        <div v-if="comment.image != null">
+        <div class="core__comment__image" v-if="comment.image != null">
       <img  :src='comment.image' alt="photo ou gif" />
       </div> 
     </div>
@@ -223,8 +224,7 @@ export default {
 }
 
 .commentaire {
-  background-color: lightgrey;
-  color: #2f4f4f;
+ 
 
 }
 .sujet__auteur {
@@ -238,6 +238,7 @@ export default {
 .sujet__titre {
   display: flex;
   width: 70%;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding-right: 10%;
@@ -250,7 +251,8 @@ export default {
 }
 .sujet__auteur__description {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   width: 50%;
   flex-flow: column wrap;
   padding-left: 10px;
@@ -275,5 +277,33 @@ export default {
 
 .core__comment {
   border-bottom: 1px solid black;
+}
+
+.core img {
+  width: 60%;
+}
+
+.core__comment__image img {
+width: 60%;
+}
+
+.sujet__auteur__commentaire {
+  width: 50%;
+ display: flex;
+ border-right: 1px solid black;
+ border-bottom: 1px solid black;
+  background-color: lightgrey;
+  color: #2f4f4f;
+  margin-bottom: 50px;
+}
+
+@media (min-width: 1250px)  {
+  .core img {
+  width: 40%;
+}
+.core__comment__image img {
+width: 40%;
+}
+  
 }
 </style>
